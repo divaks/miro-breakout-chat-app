@@ -21,6 +21,22 @@
 	let messages: Array<MessageInterface> = []
 	const handleNewMessage: MessageHandler = (text, author) => {
 		messages = [...messages, {text, author, timestamp: new Date()}]
+		let i=0;
+		let formattedMessages = [], previousAuthor = '', message = '', newMessage = '';
+		for(i=0;i<messages.length;i++) {
+			if(previousAuthor == messages[i].author) {
+				message += ' ' + messages[i].text;
+			} else {
+				if(!(message == '')) {
+					formattedMessages.push({text: message, author: previousAuthor, timestamp: new Date()});
+				}
+				message += messages[i].text;
+				previousAuthor = messages[i].author;
+			}
+		}
+		formattedMessages.push({text: message, author: previousAuthor, timestamp: new Date()});
+		messages = formattedMessages;
+		//alert(JSON.stringify(messages));
 	}
 
 	const handleMessageSend = () => {
