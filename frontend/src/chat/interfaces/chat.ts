@@ -1,7 +1,12 @@
-export interface Message {
-	text: string
+export interface InnerMessage {
+	text: string[]
 	author: string
 	timestamp: Date
+}
+
+export interface Message {
+	date: string
+	messages: InnerMessage[]
 }
 
 export type MessageHandler = (msg: string, name: string) => void

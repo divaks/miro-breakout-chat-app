@@ -19,26 +19,30 @@
 	let chatController: ChatController = null
 
 	let messages: Array<MessageInterface> = []
+
 	const handleNewMessage: MessageHandler = (text, author) => {
-		messages = [...messages, {text, author, timestamp: new Date()}]
-		let i=0;
-		let formattedMessages = [], previousAuthor = '', message = '', newMessage = '';
-		for(i=0;i<messages.length;i++) {
-			if(previousAuthor == messages[i].author) {
-				message += ' ' + messages[i].text;
-			} else {
-				if(!(message == '')) {
-					let t = messages[i-1].timestamp;
-					formattedMessages.push({text: message, author: previousAuthor, timestamp: t});
+		let currentDate = (new Date()).toString().substring(4, 15);
+		if(messages.length > 0) {
+			let lastMessage = messages[messages.length-1];
+			let lastDate = lastMessage.date;
+			let lastMessageLength = lastMessage.messages.length;
+			let lastAuthor = lastMessage.messages[lastMessageLength-1].author;
+
+			if(lastDate == currentDate ){
+				if(lastAuthor == author) {
+					lastMessage.messages[lastMessageLength-1].text.push(text);
+					lastMessage.messages[lastMessageLength-1].timestamp = new Date();
+					messages = [...messages];
+				} else {
+					lastMessage.messages.push({text: [text], author, timestamp: new Date()});
+					messages = [...messages];
 				}
-				message += messages[i].text;
-				previousAuthor = messages[i].author;
+			} else {
+				messages = [...messages, {date: currentDate, messages: [{text: [text], author, timestamp: new Date()}]}];
 			}
+		} else {
+			messages = [...messages, {date: currentDate, messages: [{text: [text], author, timestamp: new Date()}]}];
 		}
-		let t = messages[i-1].timestamp;
-		formattedMessages.push({text: message, author: previousAuthor, timestamp: t});
-		messages = formattedMessages;
-		//alert(JSON.stringify(messages));
 	}
 
 	const handleMessageSend = () => {
