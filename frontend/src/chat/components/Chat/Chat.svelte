@@ -28,13 +28,15 @@
 				message += ' ' + messages[i].text;
 			} else {
 				if(!(message == '')) {
-					formattedMessages.push({text: message, author: previousAuthor, timestamp: new Date()});
+					let t = messages[i-1].timestamp;
+					formattedMessages.push({text: message, author: previousAuthor, timestamp: t});
 				}
 				message += messages[i].text;
 				previousAuthor = messages[i].author;
 			}
 		}
-		formattedMessages.push({text: message, author: previousAuthor, timestamp: new Date()});
+		let t = messages[i-1].timestamp;
+		formattedMessages.push({text: message, author: previousAuthor, timestamp: t});
 		messages = formattedMessages;
 		//alert(JSON.stringify(messages));
 	}
